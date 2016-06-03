@@ -1,4 +1,4 @@
-function [ map_out, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OccupancyMap_in ,Resolution, map)
+function [ map_out, cur_free_xy ] = InverseSensorModel( RoboPosi, SensorRange, OccupancyMap_in ,Resolution, map )
 %INVERSESENSORMODEL Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -23,16 +23,17 @@ end
 known=unique(known(known(:,1)~=0,:),'rows');
 
 map_out=OccupancyMap_in;
-cur_free = ones(size(map))*127;
+% cur_free_xy = ones(size(map))*127;
+counter = 1;
+cur_free_xy = zeros(size(map,1)*size(map,2),2);
 for i=1:size(known)
     map_out(known(i,2),known(i,1))=map(known(i,2),known(i,1));
     if map(known(i,2),known(i,1)) == 255
-        cur_free(known(i,2),known(i,1)) = 255;
-    end;
+        cur_free_xy(counter,:) = [known(i,2) known(i,1)];
+        counter = counter + 1;
+    end
 end
-% map_out(known(:,2),known(:,1))=map(known(:,2),known(:,1));
-
-
+cur_free_xy(counter:end,:) = [];
 
 end
 

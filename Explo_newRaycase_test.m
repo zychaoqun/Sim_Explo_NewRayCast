@@ -26,13 +26,52 @@ SensorRange = 80;
 SearchRange = SensorRange/5;
 RobotStep = SensorRange/2;
 RobotStep_long=SensorRange;
+RndSet = sobolset(2);
+RndSet = ceil(RndSet(100:100000,:).*2*SensorRange);
+RndPat = zeros(SensorRange*2,SensorRange*2,'uint32');
+for i=1:length(RndSet)
+    if(RndPat(RndSet(i,1),RndSet(i,2)) == 0)
+        RndPat(RndSet(i,1),RndSet(i,2)) = i;
+    end
+end
+% setup GP Regression
 
+
+[ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
 
 tic
+RoboPosi = [118 135 90]'; % [x  y  yaw_deg]
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
-toc
 
-RoboPosi = [118 135 90]';
-[ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
- figure(2); imshow((OP_MAP), [0 255]);
- figure(3); imshow((cur_free),[0 255]);
+
+SelPat = zeros(SensorRange*2,SensorRange*2,'uint32');
+offset = [RoboPosi(1)-SensorRange RoboPosi(2)-SensorRange ];
+for i=1:length(cur_free)
+    SelPat(cur_free(i,1)-offset(1),cur_free(i,2)-offset(2)) = 1;
+end
+
+SelPts = RndPat.*SelPat;
+figure(3); imshow(SelPts,[0 1]);
+
+SelPts(SelPts==0) = max(SelPts(:)) + 1;
+% SelPts = SelPts - min(SelPts(:)) + 1;
+
+[I,J] = find(SelPts>-inf,10,'last')
+
+toc
+figure(2); imshow(OP_MAP,[0 255]);
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+ 
+ 
