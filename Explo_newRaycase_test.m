@@ -29,6 +29,10 @@ RobotStep_long=SensorRange;
 
 
 tic
-[ OP_MAP ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
+[ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
 toc
+
+RoboPosi = [118 135 90]';
+[ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
  figure(2); imshow((OP_MAP), [0 255]);
+ figure(3); imshow((cur_free),[0 255]);
