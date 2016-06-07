@@ -22,7 +22,7 @@ Po_id=randi([1 15], 1, 1);
 RobotInit(1:2,1) = RobotInitSet(1:2,Po_id);
 RobotInit(3,1)=90;
 RoboPosi = round(RobotInit);
-RoboPosi = [390 297 90]';
+RoboPosi = [40 40 90]';
 SensorRange = 80;
 SearchRange = SensorRange/5;
 RobotStep = SensorRange/2;
@@ -37,12 +37,7 @@ max_MI = 1000;
 while(max_MI > 50)
 tic
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
-% MI = length(find(OP_MAP==127));
-figure(2); imshow(OP_MAP,[0 255]);
-
 % RoboPosi = [118 135 90]'; % [x  y  yaw_deg]
-% [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
-% Entropy_2 = length(find(OP_MAP==127));
 
 % Select Candidates
 sensor_angle_inc = 10;
@@ -79,10 +74,10 @@ end
 % Save the image
 local_img = ones(2*SensorRange,2*SensorRange,'uint8').*127;
 
-row_lb = min(RoboPosi(2),SensorRange-1);
+row_lb = min(RoboPosi(2)-1,SensorRange-1);
 row_ub = min(size(map,1)-RoboPosi(2),SensorRange);
 
-col_lb = min(RoboPosi(1),SensorRange-1);
+col_lb = min(RoboPosi(1)-1,SensorRange-1);
 col_ub = min(size(map,2)-RoboPosi(1),SensorRange);
 
 im_row = RoboPosi(2);
@@ -94,7 +89,7 @@ if ( (row_lb + row_ub >= 2 * SensorRange ) &&  (col_lb + col_ub >= 2 * SensorRan
 %     figure(100); clf; imshow(OP_MAP(im_row-SensorRange+1:im_row+SensorRange,im_col-SensorRange+1:im_col+SensorRange), [0 255]);
 %     saveas(figure(100),strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]),'jpg');
 else
-    local_img(SensorRange-row_lb:SensorRange+row_ub , SensorRange-col_lb:SensorRange+col_ub) = OP_MAP(im_row-row_lb+1:im_row+row_ub+1 , im_col-col_lb+1:im_col+col_ub+1);
+    local_img(SensorRange-row_lb:SensorRange+row_ub , SensorRange-col_lb:SensorRange+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
     imwrite(local_img, strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]) , 'jpg');
 %     figure(100); clf; imshow(local_img, [0 255]);
 %     saveas(figure(100),strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]),'jpg');
@@ -110,7 +105,7 @@ toc
 
 end
 
-
+% r_img = imrotate(local_img,-1,'bilinear','crop');
 
 figure(2); imshow(OP_MAP,[0 255]);
 

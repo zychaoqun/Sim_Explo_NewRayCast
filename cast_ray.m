@@ -24,7 +24,7 @@ dy=dy*2;
 
 points=zeros(1000,2);
 n=1;
-while x>=1 && x<map_size(1) && y>=1 &&y<map_size(2)
+while x>=1 && x<map_size(2) && y>=1 &&y<map_size(1)
     if x==end_points(1) && y==end_points(2)
         break    
     end
