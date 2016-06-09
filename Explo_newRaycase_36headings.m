@@ -1,14 +1,18 @@
-
-NumOfRun=1;
-clearvars -except NumOfRun; close all; clc;
-time = clock;
-% FolderName = strcat(['Explo_Sobol_GP_10_' num2str(NumOfRun) 'thRun_' num2str(time(1)) '_' num2str(time(2)) '_' num2str(time(3)) '_' num2str(time(4)) '' num2str(time(5))]);
+close all;
+clear all;
 mkdir('train_img'); SaveImgPath = [pwd '/train_img/'];
 disp('Load data...');
-load('RobotInitSet.mat');
+load('RobotInitSet_maze.mat');
+for NumOfRun=1:length(RobotInitSet_maze)
+
+% Open the file with labels
+% clearvars -except NumOfRun; close all; clc;
+% time = clock;
+% FolderName = strcat(['Explo_Sobol_GP_10_' num2str(NumOfRun) 'thRun_' num2str(time(1)) '_' num2str(time(2)) '_' num2str(time(3)) '_' num2str(time(4)) '' num2str(time(5))]);
 
 % setup map
 map=map_setup('map.png');
+% map = map_setup_intel('intel_map.png');
 maxX=size(map,2);
 maxY=size(map,1);
 Resolution=1;
@@ -18,8 +22,9 @@ Map_OccuPts=t(map==0,:);
 OP_MAP=ones(maxY,maxX)*127;
 
 % setup robot
-Po_id=randi([1 15], 1, 1);
-RobotInit(1:2,1) = RobotInitSet(1:2,Po_id);
+% Po_id=randi([1 15], 1, 1);
+Po_id = NumOfRun;
+RobotInit(1:2,1) = RobotInitSet_maze(1:2,Po_id);
 RobotInit(3,1)=90;
 RoboPosi = round(RobotInit);
 RoboPosi = [40 40 90]';
@@ -35,6 +40,9 @@ max_MI = 1000;
 
 % Start the run
 while(max_MI > 50)
+
+    fileID = fopen('explo_train.txt','a');
+
 tic
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
 % RoboPosi = [118 135 90]'; % [x  y  yaw_deg]
@@ -85,12 +93,14 @@ im_col = RoboPosi(1);
 
 if ( (row_lb + row_ub >= 2 * SensorRange ) &&  (col_lb + col_ub >= 2 * SensorRange ))
     local_img = OP_MAP(im_row-SensorRange+1:im_row+SensorRange,im_col-SensorRange+1:im_col+SensorRange);
-    imwrite(local_img, strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]) , 'jpg');
+    imwrite(local_img, strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+    fprintf(fileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
 %     figure(100); clf; imshow(OP_MAP(im_row-SensorRange+1:im_row+SensorRange,im_col-SensorRange+1:im_col+SensorRange), [0 255]);
 %     saveas(figure(100),strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]),'jpg');
 else
     local_img(SensorRange-row_lb:SensorRange+row_ub , SensorRange-col_lb:SensorRange+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
-    imwrite(local_img, strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]) , 'jpg');
+    imwrite(local_img, strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+    fprintf(fileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
 %     figure(100); clf; imshow(local_img, [0 255]);
 %     saveas(figure(100),strcat([SaveImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx) ]),'jpg');
     disp('robot getting too close to boundaries');
@@ -101,13 +111,15 @@ RoboPosi = [Candidate(np_idx,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
-
+fclose(fileID);
 
 end
 
 % r_img = imrotate(local_img,-1,'bilinear','crop');
-
 figure(2); imshow(OP_MAP,[0 255]);
+
+
+end
 
  
  
