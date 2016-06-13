@@ -1,9 +1,10 @@
 close all;
 clear all;
-mkdir('train_img'); SaveImgPath = [pwd '/train_img/'];
+mkdir('test_img_maze_test'); SaveImgPath = [pwd '/test_img_maze_test/'];
 disp('Load data...');
 load('RobotInitSet_maze.mat');
-for NumOfRun=1:length(RobotInitSet_maze)
+% for NumOfRun=1:length(RobotInitSet_maze)
+for NumOfRun=1:2
 
 % Open the file with labels
 % clearvars -except NumOfRun; close all; clc;
@@ -11,7 +12,7 @@ for NumOfRun=1:length(RobotInitSet_maze)
 % FolderName = strcat(['Explo_Sobol_GP_10_' num2str(NumOfRun) 'thRun_' num2str(time(1)) '_' num2str(time(2)) '_' num2str(time(3)) '_' num2str(time(4)) '' num2str(time(5))]);
 
 % setup map
-map=map_setup('map.png');
+map=map_setup('map_maze_test.png');
 % map = map_setup_intel('intel_map.png');
 maxX=size(map,2);
 maxY=size(map,1);
@@ -41,7 +42,7 @@ max_MI = 1000;
 % Start the run
 while(max_MI > 50)
 
-    fileID = fopen('explo_train.txt','a');
+    fileID = fopen('explo_maze_test.txt','a');
 
 tic
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
