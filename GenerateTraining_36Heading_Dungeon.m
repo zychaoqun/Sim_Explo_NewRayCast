@@ -143,17 +143,17 @@ Step_Counter = Step_Counter + 1;
 
 toc
 fclose(trainFileID);
+fclose(testFileID);
 clear Candidate; 
 
 end
 
 % r_img = imrotate(local_img,-1,'bilinear','crop');
 % figure(2); imshow(OP_MAP,[0 255]);
-save('labelStatics_DungeonMaps_5663','labelStatic');
 
 end
 
- 
+save('labelStatics_DungeonMaps_5663','labelStatic');
  
 
  
