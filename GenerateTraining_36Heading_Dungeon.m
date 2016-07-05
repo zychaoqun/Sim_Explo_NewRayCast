@@ -11,7 +11,7 @@ pnglist = dir([pngFolder '/*.png']);
 labelStatic = zeros(36,1);
 
 offset = 0;
-for NumOfRun=offset+1:offset+length(pnglist)
+for NumOfRun=offset+3564:offset+length(pnglist)
 close all;
 % setup map
 img = rgb2gray(imread([pngFolder '/' pnglist(NumOfRun).name]));
