@@ -1,20 +1,22 @@
 close all;
 clear all;
-TrainFolderDungeon = 'TrainImg_Dungeon_5663';
-TestFolderDungeon = 'TestImg_Dungeon_5663';
+TrainFolderDungeon = 'TrainImg_Dungeon_11224';
+TestFolderDungeon = 'TestImg_Dungeon_11224';
 mkdir(TestFolderDungeon); TestImgPath = [pwd '/' TestFolderDungeon '/'];
 mkdir(TrainFolderDungeon); TrainImgPath = [pwd '/' TrainFolderDungeon '/'];
 disp('Load map names...');
-pngFolder = 'DungeonMaps_5663';
+pngFolder = 'DungeonMaps_11224';
 pnglist = dir([pngFolder '/*.png']);
 
 labelStatic = zeros(36,1);
 
-offset = 0;
-for NumOfRun=offset+3564:offset+length(pnglist)
+offset = 1795;
+for NumOfRun=offset:length(pnglist)
 close all;
 % setup map
 img = rgb2gray(imread([pngFolder '/' pnglist(NumOfRun).name]));
+img_name = pnglist(NumOfRun).name;
+img_name = img_name(1:end-4);
 [Y,X]=find(img==203);
 RobotInit(1:2,1) = [mean(X); mean(Y)];
 figure(1000); imshow(img,[0 255]);
@@ -49,8 +51,8 @@ max_MI = 1000;
 % Start the run
 while(max_MI > 250)
 
-    trainFileID = fopen('TrainImg_Dungeon_5663.txt','a');
-    testFileID = fopen('TestImg_Dungeon_5663.txt','a');
+    trainFileID = fopen('TrainImg_Dungeon_11224.txt','a');
+    testFileID = fopen('TestImg_Dungeon_11224.txt','a');
 
 tic
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
@@ -112,24 +114,24 @@ if(trainORtest)
     disp('train sample +1');
     if ( (row_lb + row_ub >= 2 * SensorRange ) &&  (col_lb + col_ub >= 2 * SensorRange ))
         local_img = OP_MAP(im_row-SensorRange+1:im_row+SensorRange,im_col-SensorRange+1:im_col+SensorRange);
-        imwrite(local_img, strcat([TrainImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(trainFileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
+        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
     else
         local_img(SensorRange-row_lb:SensorRange+row_ub , SensorRange-col_lb:SensorRange+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
-        imwrite(local_img, strcat([TrainImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(trainFileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
+        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
         disp('robot getting too close to boundaries');
     end
 else
     disp('test sample +1');
     if ( (row_lb + row_ub >= 2 * SensorRange ) &&  (col_lb + col_ub >= 2 * SensorRange ))
         local_img = OP_MAP(im_row-SensorRange+1:im_row+SensorRange,im_col-SensorRange+1:im_col+SensorRange);
-        imwrite(local_img, strcat([TestImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(testFileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
+        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
     else
         local_img(SensorRange-row_lb:SensorRange+row_ub , SensorRange-col_lb:SensorRange+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
-        imwrite(local_img, strcat([TestImgPath num2str(NumOfRun) '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(testFileID,'%d_%d|%d %d\n', NumOfRun, Step_Counter, np_idx-1, np_idx-1);
+        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
+        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
         disp('robot getting too close to boundaries');
     end
 end
