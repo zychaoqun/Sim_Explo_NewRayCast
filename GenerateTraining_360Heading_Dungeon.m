@@ -8,9 +8,13 @@ disp('Load map names...');
 pngFolder = 'DungeonMaps_11224';
 pnglist = dir([pngFolder '/*.png']);
 
+
+trainFileID = fopen('TrainImg_Dungeon_11224_360heading.txt','a');
+testFileID = fopen('TestImg_Dungeon_11224_360heading.txt','a');
+
 labelStatic = zeros(36,1);
 
-offset = 1;
+offset = 5201; %1735, 3468
 for NumOfRun=offset:length(pnglist)
 close all;
 % setup map
@@ -19,7 +23,7 @@ img_name = pnglist(NumOfRun).name;
 img_name = img_name(1:end-4);
 [Y,X]=find(img==203);
 RobotInit(1:2,1) = [mean(X); mean(Y)];
-figure(1000); imshow(img,[0 255]);
+% figure(1000); imshow(img,[0 255]);
 
 map=map_setup([pngFolder '/' pnglist(NumOfRun).name]);
 
@@ -50,9 +54,6 @@ max_MI = 1000;
 
 % Start the run
 while(max_MI > 250)
-
-    trainFileID = fopen('TrainImg_Dungeon_11224_360heading.txt','a');
-    testFileID = fopen('TestImg_Dungeon_11224_360heading.txt','a');
 
 tic
 [ OP_MAP, cur_free ] = InverseSensorModel( RoboPosi, SensorRange, OP_MAP, Resolution, map); 
@@ -144,8 +145,7 @@ RoboPosi = [Candidate(np_idx,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
-fclose(trainFileID);
-fclose(testFileID);
+
 clear Candidate; 
 
 end
@@ -155,6 +155,8 @@ end
 
 end
 
+fclose(trainFileID);
+fclose(testFileID);
 % save('labelStatics_DungeonMaps_11224','labelStatic');
  
 
