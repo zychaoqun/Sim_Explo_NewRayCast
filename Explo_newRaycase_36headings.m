@@ -3,8 +3,10 @@ clear all;
 mkdir('testImg_MazeCur'); SaveImgPath = [pwd '/testImg_MazeCur/'];
 disp('Load data...');
 load('RobotInitSet_maze_cur.mat');
-offset = 100;
-for NumOfRun=offset+1:offset+length(RobotInitSet_cur)
+offset = 1;
+
+
+for NumOfRun=offset:length(RobotInitSet_cur)
 % for NumOfRun=1:2
 
 % Open the file with labels
