@@ -13,7 +13,7 @@ trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
 testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
-offset = 1;
+offset = 4189;
 for NumOfRun=offset:length(pnglist)
 close all;
 % setup map
