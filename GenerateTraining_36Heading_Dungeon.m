@@ -140,8 +140,7 @@ RoboPosi = [Candidate(np_idx,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
-fclose(trainFileID);
-fclose(testFileID);
+
 clear Candidate; 
 
 end
@@ -150,7 +149,8 @@ end
 % figure(2); imshow(OP_MAP,[0 255]);
 
 end
-
+fclose(trainFileID);
+fclose(testFileID);
 save('labelStatics_DungeonMaps_5663','labelStatic');
  
 
