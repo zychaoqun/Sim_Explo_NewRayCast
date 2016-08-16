@@ -1,7 +1,7 @@
 close all;
 clear all;
-TrainFolderDungeon = 'TrainImg_Dungeon_11224';
-TestFolderDungeon = 'TestImg_Dungeon_11224';
+TrainFolderDungeon = 'train_img_win200';
+TestFolderDungeon = 'test_img_win200';
 mkdir(TestFolderDungeon); TestImgPath = [pwd '/' TestFolderDungeon '/'];
 mkdir(TrainFolderDungeon); TrainImgPath = [pwd '/' TrainFolderDungeon '/'];
 disp('Load map names...');
@@ -9,8 +9,8 @@ pngFolder = 'DungeonMaps_11224';
 pnglist = dir([pngFolder '/*.png']);
 
 labelStatic = zeros(36,1);
-trainFileID = fopen('TrainImg_Dungeon_11224.txt','a');
-testFileID = fopen('TestImg_Dungeon_11224.txt','a');
+trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
+testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
 offset = 1;
