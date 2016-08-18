@@ -71,6 +71,7 @@ OP_MAP_1 = OP_MAP;
         end
         if occu_count == 0 
             Candidate(counter,:) = [point(i,1),point(i,2)];
+            Candidate_idx(counter) = angle/10;
             OP_MAP_1(point(i,2),point(i,1)) = 100;
             counter = counter + 1;
         end
@@ -121,11 +122,11 @@ if(trainORtest)
     if ( (row_lb + row_ub >= 2 * img_winSize ) &&  (col_lb + col_ub >= 2 * img_winSize ))
         local_img = OP_MAP(im_row-img_winSize+1:im_row+img_winSize,im_col-img_winSize+1:im_col+img_winSize);
         imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
+        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx, Candidate_idx);
     else
         local_img(img_winSize-row_lb:img_winSize+row_ub , img_winSize-col_lb:img_winSize+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
         imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
+        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx, Candidate_idx);
         disp('robot getting too close to boundaries');
     end
 else
@@ -133,17 +134,17 @@ else
     if ( (row_lb + row_ub >= 2 * img_winSize ) &&  (col_lb + col_ub >= 2 * img_winSize ))
         local_img = OP_MAP(im_row-img_winSize+1:im_row+img_winSize,im_col-img_winSize+1:im_col+img_winSize);
         imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
+        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx, Candidate_idx);
     else
         local_img(img_winSize-row_lb:img_winSize+row_ub , img_winSize-col_lb:img_winSize+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
         imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(np_idx-1) ]) , 'jpg');
-        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, np_idx-1, np_idx-1);
+        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx, Candidate_idx);
         disp('robot getting too close to boundaries');
     end
 end
 
 % update statics about labels
-labelStatic(np_idx) = labelStatic(np_idx) + 1;
+% labelStatic(np_idx) = labelStatic(np_idx) + 1;
 
 % write to next step
 RoboPosi = [Candidate(noise,:) 90]';
@@ -151,7 +152,7 @@ Step_Counter = Step_Counter + 1;
 
 toc
 
-clear Candidate; 
+clear Candidate Candidate_idx; 
 
 end
 
@@ -161,7 +162,7 @@ end
 end
 fclose(trainFileID);
 fclose(testFileID);
-save('labelStatics_DungeonMaps_5663','labelStatic');
+% save('labelStatics_DungeonMaps_5663','labelStatic');
  
 
  

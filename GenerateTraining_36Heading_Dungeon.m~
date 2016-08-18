@@ -71,12 +71,17 @@ OP_MAP_1 = OP_MAP;
         end
         if occu_count == 0 
             Candidate(counter,:) = [point(i,1),point(i,2)];
+            Candidate_idx(counter) = 
             OP_MAP_1(point(i,2),point(i,1)) = 100;
             counter = counter + 1;
         end
     end
 
 % Evaluate MI
+if(counter == 1)
+    continue;
+end
+
 MI = zeros(length(Candidate),1);
 parfor i = 1:length(Candidate)
     OP_MAP_MI= OP_MAP;
@@ -92,7 +97,10 @@ if(max_MI < 250)
 end
 
 % add noise to improve robust
-min_idx = min()
+lb_idx = max(1,np_idx-3);
+ub_idx = min(size(Candidate,1), np_idx+3);
+noise = randi([lb_idx,ub_idx],1);
+
 
 % Save the image
 img_winSize = 128;
@@ -139,7 +147,7 @@ end
 labelStatic(np_idx) = labelStatic(np_idx) + 1;
 
 % write to next step
-RoboPosi = [Candidate(np_idx,:) 90]';
+RoboPosi = [Candidate(noise,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
