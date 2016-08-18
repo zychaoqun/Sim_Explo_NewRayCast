@@ -92,10 +92,7 @@ if(max_MI < 250)
 end
 
 % add noise to improve robust
-lb_idx = max(1,np_idx-3);
-ub_idx = min(36, np_idx+3);
-noise = randi([lb_idx,ub_idx],1);
-np_idx = noise;
+min_idx = min()
 
 % Save the image
 img_winSize = 128;
