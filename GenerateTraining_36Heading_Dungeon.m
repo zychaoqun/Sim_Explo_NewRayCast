@@ -13,7 +13,7 @@ trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
 testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
-offset = 1;
+offset = 8;
 for NumOfRun=offset:length(pnglist)
 close all;
 % setup map
@@ -95,8 +95,9 @@ end
 
 % Pick the Next Step
 [max_MI,np_idx] = max(MI);
-if(max_MI < 250)
-    continue;
+if(max_MI <= 250)
+    clear Candidate Candidate_idx; 
+    break;
 end
 
 % add noise to improve robust
