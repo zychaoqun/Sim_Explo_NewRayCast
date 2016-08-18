@@ -99,7 +99,7 @@ end
 lb_idx = max(1,np_idx-3);
 ub_idx = min(size(Candidate,1), np_idx+3);
 noise = randi([lb_idx,ub_idx],1);
-np_idx = noise;
+
 
 % Save the image
 img_winSize = 128;
@@ -146,7 +146,7 @@ end
 labelStatic(np_idx) = labelStatic(np_idx) + 1;
 
 % write to next step
-RoboPosi = [Candidate(np_idx,:) 90]';
+RoboPosi = [Candidate(noise,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
