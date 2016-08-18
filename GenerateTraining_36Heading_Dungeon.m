@@ -13,8 +13,8 @@ trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
 testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
-offset = 1;
-for NumOfRun=offset:min(length(pnglist),999)
+offset = 3000;
+for NumOfRun=offset:min(length(pnglist),5000)
 close all;
 % setup map
 img = rgb2gray(imread([pngFolder '/' pnglist(NumOfRun).name]));
