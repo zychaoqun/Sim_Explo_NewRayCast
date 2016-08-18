@@ -13,10 +13,10 @@ trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
 testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
-offset = 5001;
-for NumOfRun=offset:min(length(pnglist),6000)
-close all;
-% setup map
+offset = 1;
+for NumOfRun=offset:length(pnglist)
+
+   % setup map
 img = rgb2gray(imread([pngFolder '/' pnglist(NumOfRun).name]));
 img_name = pnglist(NumOfRun).name;
 img_name = img_name(1:end-4);
@@ -101,9 +101,9 @@ if(max_MI <= 250)
 end
 
 % add noise to improve robust
-lb_idx = max(1,np_idx-3);
-ub_idx = min(size(Candidate,1), np_idx+3);
-noise = randi([lb_idx,ub_idx],1);
+% lb_idx = max(1,np_idx-3);
+% ub_idx = min(size(Candidate,1), np_idx+3);
+% noise = randi([lb_idx,ub_idx],1);
 
 
 % Save the image
@@ -151,7 +151,7 @@ end
 % labelStatic(np_idx) = labelStatic(np_idx) + 1;
 
 % write to next step
-RoboPosi = [Candidate(noise,:) 90]';
+RoboPosi = [Candidate(np_idx,:) 90]';
 Step_Counter = Step_Counter + 1;
 
 toc
