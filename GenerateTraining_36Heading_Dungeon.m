@@ -77,6 +77,10 @@ OP_MAP_1 = OP_MAP;
     end
 
 % Evaluate MI
+if(counter == 1)
+    continue;
+end
+
 MI = zeros(length(Candidate),1);
 parfor i = 1:length(Candidate)
     OP_MAP_MI= OP_MAP;
@@ -93,7 +97,7 @@ end
 
 % add noise to improve robust
 lb_idx = max(1,np_idx-3);
-ub_idx = min(36, np_idx+3);
+ub_idx = min(size(Candidate,1), np_idx+3);
 noise = randi([lb_idx,ub_idx],1);
 np_idx = noise;
 
