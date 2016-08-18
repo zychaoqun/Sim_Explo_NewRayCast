@@ -13,8 +13,8 @@ trainFileID = fopen([TrainFolderDungeon '.txt'],'a');
 testFileID = fopen([TestFolderDungeon '.txt'],'a');
 
 
-offset = 8;
-for NumOfRun=offset:length(pnglist)
+offset = 1;
+for NumOfRun=offset:min(length(pnglist),999)
 close all;
 % setup map
 img = rgb2gray(imread([pngFolder '/' pnglist(NumOfRun).name]));
@@ -125,24 +125,24 @@ if(trainORtest)
     disp('train sample +1');
     if ( (row_lb + row_ub >= 2 * img_winSize ) &&  (col_lb + col_ub >= 2 * img_winSize ))
         local_img = OP_MAP(im_row-img_winSize+1:im_row+img_winSize,im_col-img_winSize+1:im_col+img_winSize);
-        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
-        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
+        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '-' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
+        fprintf(trainFileID,'%s_%d-%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
     else
         local_img(img_winSize-row_lb:img_winSize+row_ub , img_winSize-col_lb:img_winSize+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
-        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '|' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
-        fprintf(trainFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
+        imwrite(local_img, strcat([TrainImgPath img_name '_'  num2str(Step_Counter) '-' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
+        fprintf(trainFileID,'%s_%d-%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
         disp('robot getting too close to boundaries');
     end
 else
     disp('test sample +1');
     if ( (row_lb + row_ub >= 2 * img_winSize ) &&  (col_lb + col_ub >= 2 * img_winSize ))
         local_img = OP_MAP(im_row-img_winSize+1:im_row+img_winSize,im_col-img_winSize+1:im_col+img_winSize);
-        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
-        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
+        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '-' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
+        fprintf(testFileID,'%s_%d-%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
     else
         local_img(img_winSize-row_lb:img_winSize+row_ub , img_winSize-col_lb:img_winSize+col_ub) = OP_MAP(im_row-row_lb:im_row+row_ub , im_col-col_lb:im_col+col_ub);
-        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '|' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
-        fprintf(testFileID,'%s_%d|%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
+        imwrite(local_img, strcat([TestImgPath img_name '_'  num2str(Step_Counter) '-' num2str(Candidate_idx(np_idx)) ]) , 'jpg');
+        fprintf(testFileID,'%s_%d-%d %d\n', img_name, Step_Counter, Candidate_idx(np_idx), Candidate_idx(np_idx));
         disp('robot getting too close to boundaries');
     end
 end
